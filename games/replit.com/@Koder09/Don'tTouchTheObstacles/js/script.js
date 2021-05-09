@@ -12,6 +12,7 @@ class converter {
 	}
 }
 
+
 //Initalize
 var PLAYER_SIZE = 20;
 var CANVAS = document.getElementById("myCanvas");
@@ -30,7 +31,6 @@ var GameOVER;
 var OBSTICLE_COOLDOWN_TIME = 40;
 var OBSTICLE_SPAWNER = OBSTICLE_COOLDOWN_TIME;
 var obs = [];
-
 var high = 0;
 var not_paused_speed = 0
 var paused = false;
@@ -38,6 +38,66 @@ var PLAYERcolor = "white";
 var immortal = false;
 var gold = 0;
 var unicornEnabled = false;
+var currentPlayerY = 0;
+var yelocity = 0;
+var menu = document.getElementById("pauseMenu")
+var scoreTxt = document.getElementById("score")
+var highTXT = document.getElementById("high")
+var logs = document.getElementById("logs")
+var convert = new converter;
+var goldPer5 = localStorage.koder09ObsGP5;
+
+class cube {
+	constructor(color, cost) {
+		this.color = color
+		this.cost = cost
+	}
+	activate() {
+		window.PLAYERcolor = this.color
+	}
+	buy() {
+		if (window.gold >= this.cost) {
+			if (typeof (Storage) !== "undefined") {
+				window.gold -= this.cost
+				// Store
+				localStorage.setItem(this.color + "Cube", "owned");
+				// Retrieve
+				logs.innerHTML = ">> Bought " + this.color + " Cube <br>" + window.logs.innerHTML
+			}
+
+			document.getElementById(this.color + "Cube").innerHTML = "<button type=\"button\" class=\"btn btn-success\" onclick=\"js:cubes." + this.color + ".activate()\">Equip</button>"
+		} else {
+			window.logs.innerHTML = ">> Insufficient recources <br>" + window.logs.innerHTML
+		}
+	}
+}
+// gp5
+class goldUpgrades{
+	upgrade(){
+		if (window.gold >= 10 || window.goldPer5 > 100){
+			window.goldPer5 += 1
+			window.gold -= 10
+			localStorage.koder09ObsGP5 += 1;
+			document.getElementById("gp5").style = 'width: ' + window.goldPer5 + '%'
+			console.log(goldPer5)
+
+		} else {
+			window.logs.innerHTML = ">> Insufficient recources or upgrade at max. <br>" + window.logs.innerHTML
+		}
+	}
+}
+
+var cubes = {
+	"white": new cube("white", 0),
+	"red": new cube("red", 10),
+	"orange": new cube("orange", 20),
+	"yellow": new cube("yellow", 30),
+	"green": new cube("green", 40),
+	"blue": new cube("blue", 50),
+	"purple": new cube("purple", 60),
+	"black": new cube("black", 70),
+}
+var goldgrades = new goldUpgrades()
 
 //Game Functions
 //Initlaizer function
@@ -45,7 +105,7 @@ function setUpNewGame() {
 	OBSTICLES = [];
 	SCROLL_SPEED = 2;
 	GameOVER = true;
-	
+
 	SCORE = 0; //make the score 0
 
 	PLAYER = {
@@ -159,7 +219,7 @@ function spawnObs() {
 	}
 
 
-	
+
 }
 
 
@@ -197,7 +257,7 @@ function updateGameState() {
 		if (Math.abs(obs.x - PLAYER.x) < PLAYER_SIZE && PLAYER.y + PLAYER_SIZE > obs.y && PLAYER.y < obs.height + obs.y && paused == false && immortal == false) {
 			GameOVER = true
 			Save()
-			gold = Number(gold) + Number(Math.round(SCORE / 5))
+			gold = Number(gold) + Number(Math.round(SCORE / goldPer5))
 			document.getElementById("goldCounter").innerHTML = "<i class=\"fas fa-coins fa-2x\"></i> <b>" + gold + "</b>"
 
 		}
@@ -205,7 +265,7 @@ function updateGameState() {
 		if (obs.x < 0) {
 			SCORE++;
 			OBSTICLES.splice(length, 1);
-			SCROLL_SPEED += 0.01
+			SCROLL_SPEED += Math.random() / 7;
 		}
 	}
 
@@ -263,14 +323,7 @@ document.addEventListener("keydown", function (event) {
 );
 
 
-var currentPlayerY = 0;
-var yelocity = 0;
-var menu = document.getElementById("pauseMenu")
-var scoreTxt = document.getElementById("score")
-var highTXT = document.getElementById("high")
-var logs = document.getElementById("logs")
 
-var convert = new converter;
 
 function Save() {
 	if (typeof (Storage) !== "undefined") {
@@ -297,30 +350,30 @@ function Load() {
 		scoreTxt.innerHTML = "Score: " + SCORE;
 
 		if (localStorage.getItem("RedCube") === "owned") {
-			document.getElementById("redCube").innerHTML = "<button type=\"button\" class=\"btn btn-success\" onclick=\"js:equipRed()\">Equip</button>"
+			document.getElementById("redCube").innerHTML = "<button type=\"button\" class=\"btn btn-success\" onclick=\"js:cubes.red.equip()\">Equip</button>"
 		}
 
 		if (localStorage.getItem("OrangeCube") === "owned") {
-			document.getElementById("orangeCube").innerHTML = "<button type=\"button\" class=\"btn btn-success\" onclick=\"js:equipOrange()\">Equip</button>"
+			document.getElementById("orangeCube").innerHTML = "<button type=\"button\" class=\"btn btn-success\" onclick=\"js:cubes.orange.equip()\">Equip</button>"
 		}
 
 		if (localStorage.getItem("YellowCube") === "owned") {
-			document.getElementById("yellowCube").innerHTML = "<button type=\"button\" class=\"btn btn-success\" onclick=\"js:equipYellow()\">Equip</button>"
+			document.getElementById("yellowCube").innerHTML = "<button type=\"button\" class=\"btn btn-success\" onclick=\"js:cubes.yellow.equip()\">Equip</button>"
 		}
 
 		if (localStorage.getItem("GreenCube") === "owned") {
-			document.getElementById("greenCube").innerHTML = "<button type=\"button\" class=\"btn btn-success\" onclick=\"js:equipGreen()\">Equip</button>"
+			document.getElementById("greenCube").innerHTML = "<button type=\"button\" class=\"btn btn-success\" onclick=\"js:cubes.green.equip()\">Equip</button>"
 		}
 
 		if (localStorage.getItem("BlueCube") === "owned") {
-			document.getElementById("blueCube").innerHTML = "<button type=\"button\" class=\"btn btn-success\" onclick=\"js:equipBlue()\">Equip</button>"
+			document.getElementById("blueCube").innerHTML = "<button type=\"button\" class=\"btn btn-success\" onclick=\"js:cubes.blue.equip()\">Equip</button>"
 		}
 		if (localStorage.getItem("PurpleCube") === "owned") {
-			document.getElementById("purpleCube").innerHTML = "<button type=\"button\" class=\"btn btn-success\" onclick=\"js:equipPurple()\">Equip</button>"
-		}			
+			document.getElementById("purpleCube").innerHTML = "<button type=\"button\" class=\"btn btn-success\" onclick=\"js:cubes.purple.equip()\">Equip</button>"
+		}
 		if (localStorage.getItem("BlackCube") === "owned") {
-			document.getElementById("blackCube").innerHTML = "<button type=\"button\" class=\"btn btn-success\" onclick=\"js:equipBlack()\">Equip</button>"
-		}	
+			document.getElementById("blackCube").innerHTML = "<button type=\"button\" class=\"btn btn-success\" onclick=\"js:cubes.black.equip()\">Equip</button>"
+		}
 		logs.innerHTML = ">> Load sucessful <br>" + logs.innerHTML
 	} else {
 		logs.innerHTML = ">> Load unsupported <br>" + logs.innerHTML
@@ -337,120 +390,6 @@ function RESET() {
 	}
 }
 
-
-function buyRedCube() {
-	if (gold >= 20) {
-		if (typeof (Storage) !== "undefined") {
-			gold -= 20
-			// Store
-			localStorage.setItem("RedCube", "owned");
-			// Retrieve
-			logs.innerHTML = ">> Bought Red Cube <br>" + logs.innerHTML
-		}
-
-		document.getElementById("redCube").innerHTML = "<button type=\"button\" class=\"btn btn-success\" onclick=\"js:equipRed()\">Equip</button>"
-	} else {
-		logs.innerHTML = ">> Insufficient recources <br>" + logs.innerHTML
-	}
-}
-
-function buyOrangeCube() {
-	if (gold >= 30) {
-		if (typeof (Storage) !== "undefined") {
-			gold -= 30
-			// Store
-			localStorage.setItem("OrangeCube", "owned");
-			// Retrieve
-			logs.innerHTML = ">> Bought Orange Cube <br>" + logs.innerHTML
-		}
-
-		document.getElementById("orangeCube").innerHTML = "<button type=\"button\" class=\"btn btn-success\" onclick=\"js:equipOrange()\">Equip</button>"
-	} else {
-		logs.innerHTML = ">> Insufficient recources <br>" + logs.innerHTML
-	}
-}
-
-
-function buyYellowCube() {
-	if (gold >= 40) {
-		if (typeof (Storage) !== "undefined") {
-			gold -= 40
-			// Store
-			localStorage.setItem("YellowCube", "owned");
-			// Retrieve
-			logs.innerHTML = ">> Bought Yellow Cube <br>" + logs.innerHTML
-		}
-
-		document.getElementById("yellowCube").innerHTML = "<button type=\"button\" class=\"btn btn-success\" onclick=\"js:equipYellow()\">Equip</button>"
-	} else {
-		logs.innerHTML = ">> Insufficient recources <br>" + logs.innerHTML
-	}
-}
-
-function buyGreenCube() {
-	if (gold >= 50) {
-		if (typeof (Storage) !== "undefined") {
-			gold -= 50
-			// Store
-			localStorage.setItem("GreenCube", "owned");
-			// Retrieve
-			logs.innerHTML = ">> Bought Green Cube <br>" + logs.innerHTML
-		}
-
-		document.getElementById("greenCube").innerHTML = "<button type=\"button\" class=\"btn btn-success\" onclick=\"js:equipGreen()\">Equip</button>"
-	} else {
-		logs.innerHTML = ">> Insufficient recources <br>" + logs.innerHTML
-	}
-}
-
-function buyBlueCube() {
-	if (gold >= 60) {
-		if (typeof (Storage) !== "undefined") {
-			gold -= 60
-			// Store
-			localStorage.setItem("BlueCube", "owned");
-			// Retrieve
-			logs.innerHTML = ">> Bought Blue Cube <br>" + logs.innerHTML
-		}
-
-		document.getElementById("blueCube").innerHTML = "<button type=\"button\" class=\"btn btn-success\" onclick=\"js:equipBlue()\">Equip</button>"
-	} else {
-		logs.innerHTML = ">> Insufficient recources <br>" + logs.innerHTML
-	}
-}
-
-function buyPurpleCube() {
-	if (gold >= 70) {
-		if (typeof (Storage) !== "undefined") {
-			gold -= 70
-			// Store
-			localStorage.setItem("PurpleCube", "owned");
-			// Retrieve
-			logs.innerHTML = ">> Bought Purple Cube <br>" + logs.innerHTML
-		}
-
-		document.getElementById("purpleCube").innerHTML = "<button type=\"button\" class=\"btn btn-success\" onclick=\"js:equipPurple()\">Equip</button>"
-	} else {
-		logs.innerHTML = ">> Insufficient recources <br>" + logs.innerHTML
-	}
-}
-
-function buyBlackCube() {
-	if (gold >= 80000000) {
-		if (typeof (Storage) !== "undefined") {
-			gold -= 80000000
-			// Store
-			localStorage.setItem("BlackCube", "owned");
-			// Retrieve
-			logs.innerHTML = ">> Bought Black Cube <br>" + logs.innerHTML
-		}
-
-		document.getElementById("blackCube").innerHTML = "<button type=\"button\" class=\"btn btn-success\" onclick=\"js:equipBlack()\">Equip</button>"
-	} else {
-		logs.innerHTML = ">> Insufficient recources <br>" + logs.innerHTML
-	}
-}
-
 function equipWhite() {
 	PLAYERcolor = "white"
 	logs.innerHTML = ">> Equipped White Cube <br>" + logs.innerHTML
@@ -461,32 +400,32 @@ function equipRed() {
 	logs.innerHTML = ">> Equipped Red Cube <br>" + logs.innerHTML
 }
 
-function equipOrange(){
+function equipOrange() {
 	PLAYERcolor = "orange"
 	logs.innerHTML = ">> Equipped Orange Cube <br>" + logs.innerHTML
 }
 
-function equipYellow(){
+function equipYellow() {
 	PLAYERcolor = "yellow"
 	logs.innerHTML = ">> Equipped Yellow Cube <br>" + logs.innerHTML
 }
 
-function equipGreen(){
+function equipGreen() {
 	PLAYERcolor = "green"
 	logs.innerHTML = ">> Equipped Green Cube <br>" + logs.innerHTML
 }
 
-function equipBlue(){
+function equipBlue() {
 	PLAYERcolor = "blue"
 	logs.innerHTML = ">> Equipped Blue Cube <br>" + logs.innerHTML
 }
 
-function equipPurple(){
+function equipPurple() {
 	PLAYERcolor = "purple"
 	logs.innerHTML = ">> Equipped Purple Cube <br>" + logs.innerHTML
 }
 
-function equipBlack(){
+function equipBlack() {
 	PLAYERcolor = "black"
 	logs.innerHTML = ">> Equipped Black Cube <br>" + logs.innerHTML
 }
