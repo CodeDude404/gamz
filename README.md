@@ -1,2 +1,2 @@
-# gamz
+# games
  

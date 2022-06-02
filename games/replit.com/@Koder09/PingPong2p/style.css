@@ -1,0 +1,9 @@
+body {
+	background: black;
+}
+
+#player-area {
+	display: block;
+	margin: 50px auto;
+	background: #333;
+}

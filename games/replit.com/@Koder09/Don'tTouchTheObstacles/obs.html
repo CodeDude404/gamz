@@ -24,6 +24,14 @@
 		<meta name="msapplication-config" content="fav/browserconfig.xml">
 		<meta name="apple-mobile-web-app-capable" content="yes">
 		<script defer src="fontAwesome/all.js"></script>
+		<script>
+		window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-33G0Q3BZ6Q');
+
+	</script>
 	</head>
 	<body class="unselectable">
 		<canvas id="myCanvas" width="800" height="200" class="visible">
@@ -31,6 +39,7 @@
 		<div class="main">
 			<div class="align-left">
 				<div class="btn-group" role="group" aria-label="Basic example">
+					<button type="button" class="btn btn-success" onclick="window.location='https://games.fusionapp.repl.co';"><i class="fas fa-arrow-left fa-2x"></i></button>
 					<button class="btn btn-primary" type="button" onclick="js:PausePlay()"><i
 						class="fas fa-pause-circle fa-2x"></i></button>
 					<button type="button" class="btn btn-danger" onclick="js:game()"><i

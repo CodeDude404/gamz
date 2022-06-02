@@ -12,7 +12,15 @@ class converter {
 	}
 }
 
-
+function validate(data){
+	if (data == "NaN"){
+		return false
+	} else if ( data == "Null") {
+		return false
+	} else {
+		return true
+	}
+}
 //Initalize
 var PLAYER_SIZE = 20;
 var CANVAS = document.getElementById("myCanvas");
@@ -45,7 +53,13 @@ var scoreTxt = document.getElementById("score")
 var highTXT = document.getElementById("high")
 var logs = document.getElementById("logs")
 var convert = new converter;
-var goldPer5 = localStorage.koder09ObsGP5;
+
+var goldPer5 = parseInt(localStorage.koder09ObsGP5);
+
+if (isNaN(goldPer5)){
+	goldPer5 = 5;
+}
+
 
 class cube {
 	constructor(color, cost) {
@@ -77,9 +91,17 @@ class goldUpgrades{
 		if (window.gold >= 10 || window.goldPer5 > 100){
 			window.goldPer5 += 1
 			window.gold -= 10
-			localStorage.koder09ObsGP5 += 1;
+			
+			gold = Number(gold) + Number(Math.round(SCORE / goldPer5))
+			if (isNaN(gold) == true){
+				gold = 0;
+			}
+			Save()
+			document.getElementById("goldCounter").innerHTML = "<i class=\"fas fa-coins fa-2x\"></i> <b>" + gold + "</b>"
+
 			document.getElementById("gp5").style = 'width: ' + window.goldPer5 + '%'
 			console.log(goldPer5)
+			localStorage.koder09ObsGP5 = window.goldPer5
 
 		} else {
 			window.logs.innerHTML = ">> Insufficient recources or upgrade at max. <br>" + window.logs.innerHTML
@@ -256,8 +278,12 @@ function updateGameState() {
 
 		if (Math.abs(obs.x - PLAYER.x) < PLAYER_SIZE && PLAYER.y + PLAYER_SIZE > obs.y && PLAYER.y < obs.height + obs.y && paused == false && immortal == false) {
 			GameOVER = true
-			Save()
+
 			gold = Number(gold) + Number(Math.round(SCORE / goldPer5))
+			if (isNaN(gold) == true){
+				gold = 0;
+			}
+			Save()
 			document.getElementById("goldCounter").innerHTML = "<i class=\"fas fa-coins fa-2x\"></i> <b>" + gold + "</b>"
 
 		}
@@ -345,34 +371,40 @@ function Load() {
 		SCORE = localStorage.getItem("score");
 		high = localStorage.getItem("highscore")
 		gold = Number(localStorage.getItem("gold"))
+		if (isNaN(gold) === true) {
+			gold = 0;
+		}
 
+		if (isNaN(high) == true) {
+			high = 0;
+		}
 		highTXT.innerHTML = "High-score: " + high;
 		scoreTxt.innerHTML = "Score: " + SCORE;
 
-		if (localStorage.getItem("RedCube") === "owned") {
-			document.getElementById("redCube").innerHTML = "<button type=\"button\" class=\"btn btn-success\" onclick=\"js:cubes.red.equip()\">Equip</button>"
+		if (localStorage.getItem("redCube") === "owned") {
+			document.getElementById("redCube").innerHTML = "<button type=\"button\" class=\"btn btn-success\" onclick=\"js:cubes.red.activate()\">Equip</button>"
 		}
 
 		if (localStorage.getItem("OrangeCube") === "owned") {
-			document.getElementById("orangeCube").innerHTML = "<button type=\"button\" class=\"btn btn-success\" onclick=\"js:cubes.orange.equip()\">Equip</button>"
+			document.getElementById("orangeCube").innerHTML = "<button type=\"button\" class=\"btn btn-success\" onclick=\"js:cubes.orange.activate()\">Equip</button>"
 		}
 
 		if (localStorage.getItem("YellowCube") === "owned") {
-			document.getElementById("yellowCube").innerHTML = "<button type=\"button\" class=\"btn btn-success\" onclick=\"js:cubes.yellow.equip()\">Equip</button>"
+			document.getElementById("yellowCube").innerHTML = "<button type=\"button\" class=\"btn btn-success\" onclick=\"js:cubes.yellow.activate()\">Equip</button>"
 		}
 
 		if (localStorage.getItem("GreenCube") === "owned") {
-			document.getElementById("greenCube").innerHTML = "<button type=\"button\" class=\"btn btn-success\" onclick=\"js:cubes.green.equip()\">Equip</button>"
+			document.getElementById("greenCube").innerHTML = "<button type=\"button\" class=\"btn btn-success\" onclick=\"js:cubes.green.activate()\">Equip</button>"
 		}
 
 		if (localStorage.getItem("BlueCube") === "owned") {
-			document.getElementById("blueCube").innerHTML = "<button type=\"button\" class=\"btn btn-success\" onclick=\"js:cubes.blue.equip()\">Equip</button>"
+			document.getElementById("blueCube").innerHTML = "<button type=\"button\" class=\"btn btn-success\" onclick=\"js:cubes.blue.activate()\">Equip</button>"
 		}
 		if (localStorage.getItem("PurpleCube") === "owned") {
-			document.getElementById("purpleCube").innerHTML = "<button type=\"button\" class=\"btn btn-success\" onclick=\"js:cubes.purple.equip()\">Equip</button>"
+			document.getElementById("purpleCube").innerHTML = "<button type=\"button\" class=\"btn btn-success\" onclick=\"js:cubes.purple.activate()\">Equip</button>"
 		}
 		if (localStorage.getItem("BlackCube") === "owned") {
-			document.getElementById("blackCube").innerHTML = "<button type=\"button\" class=\"btn btn-success\" onclick=\"js:cubes.black.equip()\">Equip</button>"
+			document.getElementById("blackCube").innerHTML = "<button type=\"button\" class=\"btn btn-success\" onclick=\"js:cubes.black.activate()\">Equip</button>"
 		}
 		logs.innerHTML = ">> Load sucessful <br>" + logs.innerHTML
 	} else {
