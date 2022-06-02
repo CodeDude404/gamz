@@ -72,7 +72,10 @@ class cube {
 	buy() {
 		if (window.gold >= this.cost) {
 			if (typeof (Storage) !== "undefined") {
-				window.gold -= this.cost
+				gold = gold - this.cost
+				// console.log(this.cost)
+				// console.log(gold)
+				localStorage.setItem("gold", gold)
 				// Store
 				localStorage.setItem(this.color + "Cube", "owned");
 				// Retrieve
@@ -134,9 +137,7 @@ function setUpNewGame() {
 		x: CANVAS.width / 4, //Set the player x corrodnate to the canvas width 	divided by 4
 		y: GROUND_LEVEL - PLAYER_SIZE, //Set the player y corrodnate of the	ground minus the size of the player so that the player is not in the 	ground
 		y_velocity: 0 //Set the up and down speed to 0
-	}
-
-		;
+	};
 }
 
 //make a function to update the frame
@@ -148,7 +149,7 @@ function frameUpdate() {
 	else { }
 
 	drawGame();
-	if (immortal === true) {
+	if (immortal == true) {
 		gold = 0
 	}
 }
@@ -179,7 +180,7 @@ function drawGame() {
 	else {
 		CTX.font = "20px Arial";
 		CTX.fillStyle = "orange"
-		if (immortal === true) {
+		if (immortal == true) {
 			CTX.fillText("IMMORTAL CHEAT")
 			CTX.fillText("Don't Touch the Obstacles v1.0", CANVAS.width - 280, 30)
 		} else {
@@ -209,7 +210,7 @@ function drawPlayer() {
 		CTX.rect(PLAYER.x, PLAYER.y, PLAYER_SIZE, PLAYER_SIZE);
 		CTX.fillStyle = PLAYERcolor;
 		CTX.fill();
-	} else if (unicornEnabled === true) {
+	} else if (unicornEnabled == true) {
 		var grd = CTX.createLinearGradient(0, 0, 20, 0);
 		grd.addColorStop(0, "red");
 		grd.addColorStop(0.01, "orange");
@@ -239,9 +240,6 @@ function spawnObs() {
 	} else {
 		OBSTICLES.push(obs);
 	}
-
-
-
 }
 
 
@@ -385,25 +383,25 @@ function Load() {
 			document.getElementById("redCube").innerHTML = "<button type=\"button\" class=\"btn btn-success\" onclick=\"js:cubes.red.activate()\">Equip</button>"
 		}
 
-		if (localStorage.getItem("OrangeCube") === "owned") {
+		if (localStorage.getItem("orangeCube") === "owned") {
 			document.getElementById("orangeCube").innerHTML = "<button type=\"button\" class=\"btn btn-success\" onclick=\"js:cubes.orange.activate()\">Equip</button>"
 		}
 
-		if (localStorage.getItem("YellowCube") === "owned") {
+		if (localStorage.getItem("yellowCube") === "owned") {
 			document.getElementById("yellowCube").innerHTML = "<button type=\"button\" class=\"btn btn-success\" onclick=\"js:cubes.yellow.activate()\">Equip</button>"
 		}
 
-		if (localStorage.getItem("GreenCube") === "owned") {
+		if (localStorage.getItem("greenCube") === "owned") {
 			document.getElementById("greenCube").innerHTML = "<button type=\"button\" class=\"btn btn-success\" onclick=\"js:cubes.green.activate()\">Equip</button>"
 		}
 
-		if (localStorage.getItem("BlueCube") === "owned") {
+		if (localStorage.getItem("blueCube") === "owned") {
 			document.getElementById("blueCube").innerHTML = "<button type=\"button\" class=\"btn btn-success\" onclick=\"js:cubes.blue.activate()\">Equip</button>"
 		}
-		if (localStorage.getItem("PurpleCube") === "owned") {
+		if (localStorage.getItem("purpleCube") === "owned") {
 			document.getElementById("purpleCube").innerHTML = "<button type=\"button\" class=\"btn btn-success\" onclick=\"js:cubes.purple.activate()\">Equip</button>"
 		}
-		if (localStorage.getItem("BlackCube") === "owned") {
+		if (localStorage.getItem("blackCube") === "owned") {
 			document.getElementById("blackCube").innerHTML = "<button type=\"button\" class=\"btn btn-success\" onclick=\"js:cubes.black.activate()\">Equip</button>"
 		}
 		logs.innerHTML = ">> Load sucessful <br>" + logs.innerHTML
@@ -474,24 +472,18 @@ function PausePlay() {
 		CANVAS.style.display = "none"
 		scoreTxt.innerHTML = "Score: " + SCORE;
 		highTXT.innerHTML = "High-score: " + high;
-
-
-
-
-
-
+		spawnObsOri = spawnObs;
+		spawnObs = function () { }
 	} else {
 		SCROLL_SPEED = not_paused_speed;
 		PLAYER.y = currentPlayerY;
 		yelocity = PLAYER.y_velocity
 		PLAYER.y_velocity = 0
+		spawnObs = spawnObsOri;
 
 		paused = false
 		CANVAS.style.display = ""
 		menu.className = "container hidden"
-
-
-
 	}
 
 }
@@ -499,7 +491,6 @@ function PausePlay() {
 
 function game() {
 	GameOVER = true;
-
 }
 
 

@@ -57,9 +57,6 @@ function handleKeys(event) {
 	switch (event.keyCode) {
 		case upKeyCode: { paddleRightY -= 20; break; };
 		case downKeyCode: { paddleRightY += 20; break; };
-		case wKeyCode: { paddleLeftY -= 20; break; };
-		case sKeyCode: { paddleLeftY += 20; break; };
-
 	}
 
 }
@@ -119,7 +116,7 @@ function drawItems() {
 	drawBall(bX, bY, ballSize);
 	// draw paddle
 	drawPaddle(paddleLeftY, 'left')
-	drawPaddle(paddleRightY, 'right')
+	drawPaddle(bY, 'right')
 	writeScores();
 }
 
